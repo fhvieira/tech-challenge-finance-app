@@ -9,6 +9,7 @@ import BalanceCard from "./components/dashboard/BalanceCard";
 
 export default function Home() {
     const [transactions, setTransactions] = useState<{ type: string; amount: number }[]>([]);
+
     const balance = transactions.reduce((total, t) => {
       if (t.type === "Depósito") {
         return total + t.amount;
@@ -16,6 +17,10 @@ export default function Home() {
         return total - t.amount;
       }
     }, 0);
+
+    const handleDelete = (index: number) => {
+      setTransactions(transactions.filter((_, i) => i !== index));
+    };
 
   return (
     <main style={{ display: "flex", height: "100vh", background: "#f5f5f5" }}>
@@ -35,7 +40,10 @@ export default function Home() {
 
         <NewTransactionCard onAdd={(transaction) => setTransactions([...transactions, transaction])} />
       </div>
-      <TransactionList transactions={transactions} />
+      <TransactionList
+        transactions={transactions}
+        onDelete={handleDelete}
+      />
     </main>
   );
 }

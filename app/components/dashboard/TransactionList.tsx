@@ -1,7 +1,11 @@
+import { formatCurrency } from "@/utils/formatCurrency";
+
 export default function TransactionList({
   transactions,
+  onDelete,
 }: {
   transactions: { type: string; amount: number }[];
+  onDelete: (index: number) => void;
 }) {
   return (
     <aside
@@ -16,18 +20,23 @@ export default function TransactionList({
 
       <ul style={{ paddingLeft: "20px" }}>
         {transactions.map((t, index) => (
-          <li key={index}>
-            {t.type} - R$ {t.amount}
+          <li
+            key={index}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+            }}
+          >
+            <span>
+              {t.type} - {formatCurrency(t.amount)}
+            </span>
+            <button onClick={() => onDelete(index)} style={{ border: "none", background: "transparent", cursor: "pointer" }}>
+              🗑️
+            </button>
           </li>
         ))}
-      </ul> 
-
-      <div>
-        <ul style={{ paddingLeft: "20px" }}>
-          <li style={{ marginBottom: "6px" }}>Compra - R$ 36,00</li>
-          <li style={{ marginBottom: "6px" }}>Compra - R$ 60,00</li>
-        </ul>
-      </div>
+      </ul>
     </aside>
   );
 }
