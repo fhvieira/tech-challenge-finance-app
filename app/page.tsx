@@ -8,7 +8,7 @@ import Sidebar from "./components/layout/Sidebar";
 import BalanceCard from "./components/dashboard/BalanceCard";
 
 export default function Home() {
-    const [transactions, setTransactions] = useState<{ type: string; amount: number }[]>([]);
+    const [transactions, setTransactions] = useState<{ id: number; type: string; amount: number; date: string }[]>([]);
 
     const balance = transactions.reduce((total, t) => {
       if (t.type === "Depósito") {

@@ -3,10 +3,11 @@ import { useState } from "react";
 export default function NewTransactionCard({
   onAdd,
 }: {
-  onAdd: (t: { type: string; amount: number }) => void;
+  onAdd: (t: { id: number; type: string; amount: number; date: string }) => void;
 }) {
   const [type, setType] = useState("");
   const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
 
   return (
     <section
@@ -35,6 +36,13 @@ export default function NewTransactionCard({
           placeholder="Valor"
           style={{ flex: 1 }}
         />  
+
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+          />
       </div>
 
       <button
@@ -50,12 +58,15 @@ export default function NewTransactionCard({
           if (!type || !amount) return;
 
           onAdd({
+            id: Date.now(),
             type,
             amount: Number(amount),
+            date,
           });
 
           setType("");
           setAmount("");
+          setDate("");
         }}
       >
         Concluir transação
