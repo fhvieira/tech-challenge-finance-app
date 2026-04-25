@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Transaction } from "../../types";
 
 export default function NewTransactionCard({
   onAdd,
+  onUpdate,
+  editingTransaction,
+  onCancelEdit
 }: {
-  onAdd: (t: { id: number; type: string; amount: number; date: string }) => void;
+  onAdd: (t: Transaction) => void;
+  onUpdate: (t: Transaction) => void;
+  editingTransaction: Transaction | null;
+  onCancelEdit: () => void;
 }) {
   const [type, setType] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
+
+  useEffect(() => {
+    if (editingTransaction) {
+      setType(editingTransaction.type);
+      setAmount(String(editingTransaction.amount));
+      setDate(editingTransaction.date);
+    }
+  }, [editingTransaction]);
 
   return (
     <section
@@ -55,22 +70,52 @@ export default function NewTransactionCard({
           borderRadius: "6px",
         }}
         onClick={() => {
-          if (!type || !amount) return;
+          if (!type || !amount || !date) return;
 
-          onAdd({
-            id: Date.now(),
-            type,
-            amount: Number(amount),
-            date,
-          });
+          if (editingTransaction) {
+            onUpdate({
+              id: editingTransaction.id,
+              type,
+              amount: Number(amount),
+              date,
+            });
+          } else {
+            onAdd({ 
+              id: Date.now(),
+              type,
+              amount: Number(amount),
+              date,
+            });
+          }
 
           setType("");
           setAmount("");
           setDate("");
         }}
       >
-        Concluir transação
+        {editingTransaction ? "Salvar alteração" : "Concluir transação"}
       </button>
+      {editingTransaction && (
+        <button
+          style={{
+            width: "100%",
+            padding: "12px",
+            background: "#0f4c5c",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+          }}
+          type="button"
+          onClick={() => {
+            setType("");
+            setAmount("");
+            setDate("");
+            onCancelEdit();
+          }}
+        >
+          Cancelar edição
+        </button>
+      )}
     </section>
   );
 }

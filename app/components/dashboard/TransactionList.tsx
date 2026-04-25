@@ -1,4 +1,5 @@
 import { formatCurrency } from "@/utils/formatCurrency";
+import { Transaction } from "../../types";
 
 function getMonthName(dateString: string) {
   const date = new Date(dateString);
@@ -8,11 +9,17 @@ function getMonthName(dateString: string) {
 export default function TransactionList({
   transactions,
   onDelete,
+  onEdit,
+  onView,
+  selectedTransaction
 }: {
-  transactions: { type: string; amount: number; date: string }[];
-  onDelete: (index: number) => void;
+  transactions: Transaction[];
+  onDelete: (id: number) => void;
+  onEdit: (transaction: Transaction) => void;
+  onView: (transaction: Transaction) => void;
+  selectedTransaction: Transaction | null;
 }) {
-    const groupedTransactions = transactions.reduce((acc, transaction) => {
+  const groupedTransactions = transactions.reduce((acc, transaction) => {
     const month = getMonthName(transaction.date);
 
     if (!acc[month]) {
@@ -21,7 +28,7 @@ export default function TransactionList({
 
     acc[month].push(transaction);
     return acc;
-  }, {} as Record<string, { type: string; amount: number; date: string }[]>);
+  }, {} as Record<string, Transaction[]>);
 
   return (
     <aside
@@ -44,7 +51,7 @@ export default function TransactionList({
 
               return (
                 <li
-                  key={originalIndex}
+                  key={t.id}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -54,14 +61,23 @@ export default function TransactionList({
                   <span>
                     {t.type} - {formatCurrency(t.amount)}
                   </span>
-
-                  <button onClick={() => onDelete(originalIndex)}>🗑️</button>
+                  <button onClick={() => onView(t)}>👁️</button>
+                  <button onClick={() => onEdit(t)}>✏️</button>
+                  <button onClick={() => onDelete(t.id)}>🗑️</button>
                 </li>
               );
             })}
           </ul>
         </div>
       ))}
+      {selectedTransaction && (
+        <section style={{ marginTop: "24px", padding: "12px", background: "white" }}>
+          <h3>Detalhes</h3>
+          <p>Tipo: {selectedTransaction.type}</p>
+          <p>Valor: {formatCurrency(selectedTransaction.amount)}</p>
+          <p>Data: {selectedTransaction.date}</p>
+        </section>
+      )}      
     </aside>
   );
 }
