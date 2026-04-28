@@ -1,5 +1,6 @@
 import { formatCurrency } from "@/utils/formatCurrency";
 import { Transaction } from "../../types";
+import { formatDate } from "@/utils/formatDate";
 
 function getMonthName(dateString: string) {
   const date = new Date(dateString);
@@ -30,13 +31,23 @@ export default function TransactionList({
     return acc;
   }, {} as Record<string, Transaction[]>);
 
+  if (transactions.length === 0) {
+    return (
+      <aside style={{ width: "300px", padding: "20px" }}>
+        <h2>Extrato</h2>
+        <p>Nenhuma transação ainda</p>
+      </aside>
+    );
+  }
+
   return (
     <aside
       style={{
-        width: "300px",
-        background: "#f9f9f9",
-        padding: "20px",
-        borderLeft: "1px solid #ddd",
+        width: "320px",
+        background: "white",
+        padding: "24px",
+        borderLeft: "1px solid #e5e5e5",
+        boxShadow: "-4px 0 12px rgba(0,0,0,0.04)",
       }}
     >
       <h2>Extrato</h2>
@@ -55,7 +66,10 @@ export default function TransactionList({
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    marginBottom: "8px",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                    paddingBottom: "8px",
+                    borderBottom: "1px solid #eee",
                   }}
                 >
                   <span>
@@ -75,7 +89,7 @@ export default function TransactionList({
           <h3>Detalhes</h3>
           <p>Tipo: {selectedTransaction.type}</p>
           <p>Valor: {formatCurrency(selectedTransaction.amount)}</p>
-          <p>Data: {selectedTransaction.date}</p>
+          <p>{formatDate(selectedTransaction.date)}</p>
         </section>
       )}      
     </aside>

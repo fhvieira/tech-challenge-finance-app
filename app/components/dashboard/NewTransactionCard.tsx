@@ -29,7 +29,8 @@ export default function NewTransactionCard({
       style={{
         background: "white",
         padding: "24px",
-        borderRadius: "12px",
+        borderRadius: "16px",
+        boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
       }}
     >   
       <h2 style={{ marginBottom: "15px" }}>Nova transação</h2>
@@ -38,7 +39,12 @@ export default function NewTransactionCard({
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          style={{ flex: 1 }}
+          style={{
+            flex: 1,
+            padding: "12px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+          }}
         >
           <option value="">Tipo</option>
           <option value="Depósito">Depósito</option>
@@ -46,17 +52,27 @@ export default function NewTransactionCard({
         </select>
 
         <input
+          type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Valor"
-          style={{ flex: 1 }}
+          style={{
+            flex: 1,
+            padding: "12px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+          }}
         />  
-
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            style={{ width: "100%", padding: "10px" }}
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+            }}
           />
       </div>
 
@@ -67,10 +83,15 @@ export default function NewTransactionCard({
           background: "#0f4c5c",
           color: "white",
           border: "none",
-          borderRadius: "6px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          fontWeight: "bold",
         }}
         onClick={() => {
-          if (!type || !amount || !date) return;
+          if (!type || !amount || !date) {
+            alert("Preencha todos os campos");
+            return;
+          }
 
           if (editingTransaction) {
             onUpdate({

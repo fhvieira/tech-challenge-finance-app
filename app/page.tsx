@@ -58,9 +58,14 @@ export default function Home() {
   }, [transactions]);
 
   return (
-    <main style={{ display: "flex", height: "100vh", background: "#f5f5f5" }}>
+    <main
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "#f4f6f8",
+      }}
+    >
       <Sidebar />
-
       <div
         style={{
           flex: 1,

@@ -6,9 +6,9 @@ export default function BalanceCard({ balance }: { balance: number }) {
       style={{
         background: "#0f4c5c",
         color: "white",
-        padding: "20px",
-        borderRadius: "10px",
-        marginBottom: "20px",
+        padding: "24px",
+        borderRadius: "16px",
+        boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
       }}
     >
       <h2 style={{ marginBottom: "10px" }}>Olá, Joana! :)</h2>
