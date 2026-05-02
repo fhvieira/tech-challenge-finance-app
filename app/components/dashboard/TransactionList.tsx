@@ -75,9 +75,56 @@ export default function TransactionList({
                   <span>
                     {t.type} - {formatCurrency(t.amount)}
                   </span>
-                  <button onClick={() => onView(t)}>👁️</button>
-                  <button onClick={() => onEdit(t)}>✏️</button>
-                  <button onClick={() => onDelete(t.id)}>🗑️</button>
+                  
+                  <div style={{ display: "flex", gap: "6px" }}>
+                    <button
+                      onClick={() => onView(t)}
+                      style={{
+                        border: "none",
+                        background: "#eef2f3",
+                        borderRadius: "6px",
+                        padding: "4px 6px",
+                        cursor: "pointer",
+                        transition: "0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#dfe5e7")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "#eef2f3")}
+                    >
+                      👁️
+                    </button>
+
+                    <button
+                      onClick={() => onEdit(t)}
+                      style={{
+                        border: "none",
+                        background: "#eef2f3",
+                        borderRadius: "6px",
+                        padding: "4px 6px",
+                        cursor: "pointer",
+                        transition: "0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#dfe5e7")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "#eef2f3")}
+                    >
+                      ✏️
+                    </button>
+
+                    <button
+                      onClick={() => onDelete(t.id)}
+                      style={{
+                        border: "none",
+                        background: "#ffecec",
+                        borderRadius: "6px",
+                        padding: "4px 6px",
+                        cursor: "pointer",
+                        transition: "0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#dfe5e7")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "#ffecec")}
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 </li>
               );
             })}

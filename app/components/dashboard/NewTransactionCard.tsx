@@ -31,10 +31,12 @@ export default function NewTransactionCard({
         padding: "24px",
         borderRadius: "16px",
         boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
+        transition: "0.2s",
       }}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
     >   
       <h2 style={{ marginBottom: "15px" }}>Nova transação</h2>
-
       <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
         <select
           value={type}
@@ -85,8 +87,10 @@ export default function NewTransactionCard({
           border: "none",
           borderRadius: "8px",
           cursor: "pointer",
-          fontWeight: "bold",
+          transition: "0.2s",
         }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "#0c3d49")}
+        onMouseLeave={(e) => (e.currentTarget.style.background = "#0f4c5c")}
         onClick={() => {
           if (!type || !amount || !date) {
             alert("Preencha todos os campos");
