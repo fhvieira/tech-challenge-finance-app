@@ -58,23 +58,9 @@ export default function Home() {
   }, [transactions]);
 
   return (
-    <main
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "#f4f6f8",
-      }}
-    >
+    <main className="flex min-h-screen bg-[#f4f6f8] text-slate-900">
       <Sidebar />
-      <div
-        style={{
-          flex: 1,
-          padding: "20px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-        }}
-      >
+      <div className="flex flex-1 flex-col gap-5 p-5">
         <Header />
         <BalanceCard balance={balance} />
 

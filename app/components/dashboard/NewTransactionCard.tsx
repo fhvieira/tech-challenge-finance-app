@@ -25,28 +25,13 @@ export default function NewTransactionCard({
   }, [editingTransaction]);
 
   return (
-    <section
-      style={{
-        background: "white",
-        padding: "24px",
-        borderRadius: "16px",
-        boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-        transition: "0.2s",
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
-      onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-    >   
-      <h2 style={{ marginBottom: "15px" }}>Nova transação</h2>
-      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+    <section className="rounded-2xl bg-white p-6 shadow-md">
+      <h2 className="mb-[15px] text-2xl font-bold">Nova transação</h2>
+      <div className="mb-2.5 flex gap-2.5">
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          style={{
-            flex: 1,
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-          }}
+          className="flex-1 rounded-lg border border-slate-300 p-3"
         >
           <option value="">Tipo</option>
           <option value="Depósito">Depósito</option>
@@ -58,39 +43,18 @@ export default function NewTransactionCard({
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Valor"
-          style={{
-            flex: 1,
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-          }}
+          className="flex-1 rounded-lg border border-slate-300 p-3"
         />  
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-            }}
+            className="flex-1 rounded-lg border border-slate-300 p-3"
           />
       </div>
 
       <button
-        style={{
-          width: "100%",
-          padding: "12px",
-          background: "#0f4c5c",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          transition: "0.2s",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "#0c3d49")}
-        onMouseLeave={(e) => (e.currentTarget.style.background = "#0f4c5c")}
+        className="w-full rounded-lg bg-teal-900 p-3 font-bold text-white transition hover:bg-teal-950"
         onClick={() => {
           if (!type || !amount || !date) {
             alert("Preencha todos os campos");
@@ -122,14 +86,7 @@ export default function NewTransactionCard({
       </button>
       {editingTransaction && (
         <button
-          style={{
-            width: "100%",
-            padding: "12px",
-            background: "#0f4c5c",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-          }}
+          className="w-full rounded-lg bg-teal-900 p-3 font-bold text-white transition hover:bg-teal-950"
           type="button"
           onClick={() => {
             setType("");

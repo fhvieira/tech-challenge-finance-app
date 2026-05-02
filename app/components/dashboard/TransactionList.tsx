@@ -33,94 +33,50 @@ export default function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <aside style={{ width: "300px", padding: "20px" }}>
-        <h2>Extrato</h2>
+      <aside className="w-[300px] p-5">
+        <h2 className="text-2xl font-bold">Extrato</h2>
         <p>Nenhuma transação ainda</p>
       </aside>
     );
   }
 
   return (
-    <aside
-      style={{
-        width: "320px",
-        background: "white",
-        padding: "24px",
-        borderLeft: "1px solid #e5e5e5",
-        boxShadow: "-4px 0 12px rgba(0,0,0,0.04)",
-      }}
-    >
-      <h2>Extrato</h2>
+    <aside className="w-[320px] border-l border-[#e5e5e5] bg-white p-6 shadow-[-4px_0_12px_rgba(0,0,0,0.04)]">
+      <h2 className="text-2xl font-bold">Extrato</h2>
 
       {Object.entries(groupedTransactions).map(([month, items]) => (
-        <div key={month} style={{ marginTop: "20px" }}>
-          <h3 style={{ marginBottom: "10px" }}>{month}</h3>
+        <div key={month} className="mt-5">
+          <h3 className="mb-2.5 font-bold">{month}</h3>
 
-          <ul style={{ paddingLeft: "20px" }}>
+          <ul className="pl-5">
             {items.map((t) => {
-              const originalIndex = transactions.indexOf(t);
-
               return (
                 <li
                   key={t.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "10px",
-                    paddingBottom: "8px",
-                    borderBottom: "1px solid #eee",
-                  }}
+                  className="mb-2.5 flex items-center justify-between border-b border-[#eee] pb-2"
                 >
                   <span>
                     {t.type} - {formatCurrency(t.amount)}
                   </span>
                   
-                  <div style={{ display: "flex", gap: "6px" }}>
+                  <div className="flex gap-1">
                     <button
                       onClick={() => onView(t)}
-                      style={{
-                        border: "none",
-                        background: "#eef2f3",
-                        borderRadius: "6px",
-                        padding: "4px 6px",
-                        cursor: "pointer",
-                        transition: "0.2s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "#dfe5e7")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "#eef2f3")}
+                      className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
                     >
                       👁️
                     </button>
 
                     <button
                       onClick={() => onEdit(t)}
-                      style={{
-                        border: "none",
-                        background: "#eef2f3",
-                        borderRadius: "6px",
-                        padding: "4px 6px",
-                        cursor: "pointer",
-                        transition: "0.2s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "#dfe5e7")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "#eef2f3")}
+                      className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
                     >
                       ✏️
                     </button>
 
                     <button
                       onClick={() => onDelete(t.id)}
-                      style={{
-                        border: "none",
-                        background: "#ffecec",
-                        borderRadius: "6px",
-                        padding: "4px 6px",
-                        cursor: "pointer",
-                        transition: "0.2s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "#dfe5e7")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "#ffecec")}
+                      className="rounded-md bg-[#ffecec] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
                     >
                       🗑️
                     </button>
@@ -132,8 +88,8 @@ export default function TransactionList({
         </div>
       ))}
       {selectedTransaction && (
-        <section style={{ marginTop: "24px", padding: "12px", background: "white" }}>
-          <h3>Detalhes</h3>
+        <section className="mt-6 bg-white p-3">
+          <h3 className="font-bold">Detalhes</h3>
           <p>Tipo: {selectedTransaction.type}</p>
           <p>Valor: {formatCurrency(selectedTransaction.amount)}</p>
           <p>{formatDate(selectedTransaction.date)}</p>
