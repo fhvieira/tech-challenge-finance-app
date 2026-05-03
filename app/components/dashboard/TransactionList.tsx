@@ -29,7 +29,7 @@ export default function TransactionList({
 
     acc[month].push(transaction);
     return acc;
-  }, {} as Record<string, Transaction[]>);
+  }, {} as Record<string, Transaction[]>);  
 
   if (transactions.length === 0) {
     return (
