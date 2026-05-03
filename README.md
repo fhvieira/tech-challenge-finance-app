@@ -1,62 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tech Challenge – Dashboard Financeiro
 
-## Getting Started
+Aplicação front-end para gerenciamento de transações financeiras, desenvolvida com **Next.js (App Router)**.
 
-First, run the development server:
+## Visão Geral
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Este projeto permite que o usuário:
+
+- Visualize o saldo da conta
+- Veja as transações agrupadas por mês
+- Adicione novas transações
+- Edite transações existentes
+- Exclua transações
+- Persista os dados localmente utilizando `localStorage`
+
+A interface foi inspirada no layout fornecido no Figma, priorizando clareza, usabilidade e responsividade.
+
+---
+
+## Tecnologias
+
+- Next.js (App Router)
+- React
+- TypeScript
+- Tailwind CSS
+
+---
+
+## Funcionalidades
+
+- Dashboard com cálculo automático do saldo
+- Listagem de transações agrupadas por mês
+- Criar / Editar / Excluir transações
+- Persistência local (sem necessidade de back-end)
+- Layout responsivo (desktop e mobile)
+
+---
+
+## Design System
+
+Foi criado um pequeno design system baseado em componentes reutilizáveis e Tailwind CSS.
+
+### Componentes
+
+- `Header`
+- `Sidebar`
+- `BalanceCard`
+- `NewTransactionCard`
+- `TransactionList`
+
+### Princípios
+
+- Consistência de espaçamento e layout
+- Uso de componentes reutilizáveis
+- Hierarquia visual clara
+- Responsividade
+- Cores inspiradas no Figma
+
+---
+
+## Estrutura do Projeto
+
+```
+app/
+  page.tsx                // Componente servidor (entry point)
+  components/
+    dashboard/
+      Dashboard.tsx       // Componente cliente com estado
+      BalanceCard.tsx
+      NewTransactionCard.tsx
+      TransactionList.tsx
+    layout/
+      Header.tsx
+      Sidebar.tsx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Running locally
+## Como executar
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Learn More
+Acesse no navegador:
 
-To learn more about Next.js, take a look at the following resources:
+```
+http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Observações
 
-## Deploy on Vercel
+- Não há back-end; os dados são gerenciados no front-end.
+- As transações são armazenadas no `localStorage`.
+- O Figma foi utilizado como referência visual (não seguido rigidamente).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Demonstração
 
-## Design System
+O vídeo de demonstração apresenta:
 
-This project uses a small design system based on reusable components and Tailwind CSS.
-
-### Main components
-
-- `Header`: top area with user greeting
-- `Sidebar`: navigation menu
-- `BalanceCard`: displays account balance
-- `NewTransactionCard`: form used to create and edit transactions
-- `TransactionList`: displays transactions grouped by month
-
-### Visual standards
-
-- Tailwind CSS is used for spacing, colors, typography, and responsive layout.
-- Cards use rounded corners, shadows, and consistent padding.
-- The layout follows the Figma reference, but the Figma was used only as visual guidance.
-- Components were created to be reusable and easier to maintain.
+- Navegação pela aplicação
+- Criação de uma transação
+- Edição de uma transação
+- Exclusão de uma transação
+- Persistência dos dados após atualização da página
