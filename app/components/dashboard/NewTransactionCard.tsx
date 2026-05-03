@@ -27,7 +27,7 @@ export default function NewTransactionCard({
   return (
     <section className="rounded-2xl bg-white p-6 shadow-md">
       <h2 className="mb-[15px] text-2xl font-bold">Nova transação</h2>
-      <div className="mb-2.5 flex gap-2.5">
+      <div className="mb-3 flex flex-col gap-3 md:flex-row">
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
@@ -86,7 +86,7 @@ export default function NewTransactionCard({
       </button>
       {editingTransaction && (
         <button
-          className="w-full rounded-lg bg-teal-900 p-3 font-bold text-white transition hover:bg-teal-950"
+          className="mt-3 w-full rounded-lg border border-slate-300 p-3 font-bold text-slate-700 transition hover:bg-slate-100"
           type="button"
           onClick={() => {
             setType("");

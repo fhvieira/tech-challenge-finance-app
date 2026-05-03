@@ -33,7 +33,7 @@ export default function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <aside className="w-[300px] p-5">
+      <aside className="w-full p-4 sm:p-5 lg:w-[300px] lg:shrink-0">
         <h2 className="text-2xl font-bold">Extrato</h2>
         <p>Nenhuma transação ainda</p>
       </aside>
@@ -41,25 +41,25 @@ export default function TransactionList({
   }
 
   return (
-    <aside className="w-[320px] border-l border-[#e5e5e5] bg-white p-6 shadow-[-4px_0_12px_rgba(0,0,0,0.04)]">
+    <aside className="w-full border-t border-[#e5e5e5] bg-white p-4 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] sm:p-6 lg:w-[320px] lg:shrink-0 lg:border-l lg:border-t-0 lg:shadow-[-4px_0_12px_rgba(0,0,0,0.04)]">
       <h2 className="text-2xl font-bold">Extrato</h2>
 
       {Object.entries(groupedTransactions).map(([month, items]) => (
         <div key={month} className="mt-5">
           <h3 className="mb-2.5 font-bold">{month}</h3>
 
-          <ul className="pl-5">
+          <ul className="pl-0 sm:pl-5">
             {items.map((t) => {
               return (
                 <li
                   key={t.id}
-                  className="mb-2.5 flex items-center justify-between border-b border-[#eee] pb-2"
+                  className="mb-2.5 flex flex-col gap-2 border-b border-[#eee] pb-2 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <span>
+                  <span className="min-w-0 break-words">
                     {t.type} - {formatCurrency(t.amount)}
                   </span>
                   
-                  <div className="flex gap-1">
+                  <div className="flex shrink-0 gap-1">
                     <button
                       onClick={() => onView(t)}
                       className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"

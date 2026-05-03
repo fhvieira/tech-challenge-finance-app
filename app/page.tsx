@@ -58,9 +58,9 @@ export default function Home() {
   }, [transactions]);
 
   return (
-    <main className="flex min-h-screen bg-[#f4f6f8] text-slate-900">
+    <main className="flex min-h-screen flex-col bg-[#f4f6f8] text-slate-900 lg:flex-row">
       <Sidebar />
-      <div className="flex flex-1 flex-col gap-5 p-5">
+      <div className="flex min-w-0 flex-1 flex-col gap-5 p-4 sm:p-5">
         <Header />
         <BalanceCard balance={balance} />
 
