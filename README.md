@@ -20,6 +20,13 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Running locally
+
+```bash
+npm install
+npm run dev
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -34,3 +41,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Design System
+
+This project uses a small design system based on reusable components and Tailwind CSS.
+
+### Main components
+
+- `Header`: top area with user greeting
+- `Sidebar`: navigation menu
+- `BalanceCard`: displays account balance
+- `NewTransactionCard`: form used to create and edit transactions
+- `TransactionList`: displays transactions grouped by month
+
+### Visual standards
+
+- Tailwind CSS is used for spacing, colors, typography, and responsive layout.
+- Cards use rounded corners, shadows, and consistent padding.
+- The layout follows the Figma reference, but the Figma was used only as visual guidance.
+- Components were created to be reusable and easier to maintain.
