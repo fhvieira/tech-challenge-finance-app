@@ -40,7 +40,15 @@ A interface foi inspirada no layout fornecido no Figma, priorizando clareza, usa
 
 Foi criado um pequeno design system baseado em componentes reutilizáveis e Tailwind CSS.
 
-A documentação dos componentes foi realizada diretamente no código e neste README, priorizando simplicidade para este desafio.
+### Storybook
+
+Foi utilizado Storybook para documentar componentes personalizados da aplicação.
+
+Para executar:
+
+```bash
+npm run storybook
+```
 
 ### Componentes
 
@@ -110,3 +118,4 @@ O vídeo de demonstração apresenta:
 - Edição de uma transação
 - Exclusão de uma transação
 - Persistência dos dados após atualização da página
+- Storybook
