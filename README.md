@@ -40,6 +40,8 @@ A interface foi inspirada no layout fornecido no Figma, priorizando clareza, usa
 
 Foi criado um pequeno design system baseado em componentes reutilizáveis e Tailwind CSS.
 
+A documentação dos componentes foi realizada diretamente no código e neste README, priorizando simplicidade para este desafio.
+
 ### Componentes
 
 - `Header`
