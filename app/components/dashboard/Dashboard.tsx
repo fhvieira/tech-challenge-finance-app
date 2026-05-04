@@ -1,19 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BalanceCard from "./BalanceCard";
 import NewTransactionCard from "./NewTransactionCard";
 import TransactionList from "./TransactionList";
 import Header from "../layout/Header";
 import Sidebar from "../layout/Sidebar";
 import { Transaction } from "../../types";
+import { useTransactions } from "../../hooks/useTransactions";
 
 export default function Dashboard() {
 
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const { transactions, setTransactions } = useTransactions();  
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const balance = transactions.reduce((total, t) => {
     if (t.type === "Depósito") {
@@ -45,26 +45,6 @@ export default function Dashboard() {
       currentSelectedTransaction?.id === id ? null : currentSelectedTransaction
     );
   };
-
-  useEffect(() => {
-    const storedTransactions = localStorage.getItem("transactions");
-
-    if (storedTransactions) {
-      try {
-        setTransactions(JSON.parse(storedTransactions));
-      } catch {
-        localStorage.removeItem("transactions");
-      }
-    }
-
-    setIsLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  }, [transactions, isLoaded]);
 
   return (
     <main className="flex min-h-screen flex-col bg-[#f4f6f8] text-slate-900 lg:flex-row">

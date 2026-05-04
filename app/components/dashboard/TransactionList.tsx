@@ -7,19 +7,21 @@ function getMonthName(dateString: string) {
   return date.toLocaleString("pt-BR", { month: "long" });
 }
 
+type TransactionListProps = {
+  transactions: Transaction[];
+  onDelete: (id: number) => void;
+  onEdit: (transaction: Transaction) => void;
+  onView?: (transaction: Transaction) => void;
+  selectedTransaction?: Transaction | null;
+};
+
 export default function TransactionList({
   transactions,
   onDelete,
   onEdit,
   onView,
-  selectedTransaction
-}: {
-  transactions: Transaction[];
-  onDelete: (id: number) => void;
-  onEdit: (transaction: Transaction) => void;
-  onView: (transaction: Transaction) => void;
-  selectedTransaction: Transaction | null;
-}) {
+  selectedTransaction,
+}: TransactionListProps) {
   const groupedTransactions = transactions.reduce((acc, transaction) => {
     const month = getMonthName(transaction.date);
 
@@ -35,7 +37,6 @@ export default function TransactionList({
     return (
       <aside className="w-full p-4 sm:p-5 lg:w-[300px] lg:shrink-0">
         <h2 className="text-2xl font-bold">Extrato</h2>
-        <p>Nenhuma transação ainda</p>
       </aside>
     );
   }
@@ -46,55 +47,62 @@ export default function TransactionList({
 
       {Object.entries(groupedTransactions).map(([month, items]) => (
         <div key={month} className="mt-5">
-          <h3 className="mb-2.5 font-bold">{month}</h3>
+          <h3 className="mb-2.5 font-bold capitalize">{month}</h3>
 
           <ul className="pl-0 sm:pl-5">
-            {items.map((t) => {
-              return (
-                <li
-                  key={t.id}
-                  className="mb-2.5 flex flex-col gap-2 border-b border-[#eee] pb-2 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <span className="min-w-0 break-words">
-                    {t.type} - {formatCurrency(t.amount)}
-                  </span>
-                  
-                  <div className="flex shrink-0 gap-1">
-                    <button
-                      onClick={() => onView(t)}
-                      className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
-                    >
-                      👁️
-                    </button>
+            {items.map((transaction) => (
+              <li
+                key={transaction.id}
+                className="mb-2.5 flex flex-col gap-2 border-b border-[#eee] pb-2 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0 break-words">
+                  <p>
+                    {transaction.type} - {formatCurrency(transaction.amount)}
+                  </p>
+                  <p className="text-sm text-slate-500">
+                    {formatDate(transaction.date)}
+                  </p>
+                </div>
 
-                    <button
-                      onClick={() => onEdit(t)}
-                      className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
-                    >
-                      ✏️
-                    </button>
+                <div className="flex shrink-0 gap-1">
+                  <button
+                    onClick={() => onView?.(transaction)}
+                    className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
+                    aria-label="Visualizar detalhes"
+                  >
+                    👁
+                  </button>
 
-                    <button
-                      onClick={() => onDelete(t.id)}
-                      className="rounded-md bg-[#ffecec] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
+                  <button
+                    onClick={() => onEdit(transaction)}
+                    className="rounded-md bg-[#eef2f3] px-1.5 py-1 transition hover:bg-[#dfe5e7]"
+                    aria-label="Editar"
+                  >
+                    ✏️
+                  </button>
+
+                  <button
+                    onClick={() => onDelete(transaction.id)}
+                    className="rounded-md bg-[#ffecec] px-1.5 py-1 transition hover:bg-[#ffdede]"
+                    aria-label="Excluir"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       ))}
+
       {selectedTransaction && (
-        <section className="mt-6 bg-white p-3">
+        <section className="mt-6 rounded-xl bg-[#f8fafc] p-3">
           <h3 className="font-bold">Detalhes</h3>
           <p>Tipo: {selectedTransaction.type}</p>
           <p>Valor: {formatCurrency(selectedTransaction.amount)}</p>
-          <p>{formatDate(selectedTransaction.date)}</p>
+          <p>Data: {formatDate(selectedTransaction.date)}</p>
         </section>
-      )}      
+      )}
     </aside>
   );
 }
