@@ -25,9 +25,9 @@ export default function Sidebar() {
 
         <li>
           <Link
-            href="/transactions"
+            href="/trasacoes"
             className={`block rounded-lg px-3 py-2 font-bold transition ${
-              pathname === "/transactions" ? "bg-white/20" : "hover:bg-white/10"
+              pathname === "/trasacoes" ? "bg-white/20" : "hover:bg-white/10"
             }`}
           >
             Transações
