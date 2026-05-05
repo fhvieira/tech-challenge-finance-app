@@ -1,9 +1,11 @@
-export function formatDate(dateString: string) {
-  const date = new Date(dateString);
+export function parseDateInput(dateString: string) {
+  const [year, month, day] = dateString.split("-").map(Number);
 
-  return date.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  return new Date(year, month - 1, day);
+}
+
+export function formatDate(dateString: string) {
+  const [year, month, day] = dateString.split("-");
+
+  return `${day}/${month}/${year}`;
 }

@@ -1,9 +1,9 @@
 import { formatCurrency } from "@/utils/formatCurrency";
 import { Transaction } from "../../types";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate, parseDateInput } from "@/utils/formatDate";
 
 function getMonthName(dateString: string) {
-  const date = new Date(dateString);
+  const date = parseDateInput(dateString);
   return date.toLocaleString("pt-BR", { month: "long" });
 }
 
