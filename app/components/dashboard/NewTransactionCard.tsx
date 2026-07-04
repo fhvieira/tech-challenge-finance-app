@@ -1,28 +1,33 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Transaction } from "../../types";
 
-export default function NewTransactionCard({
-  onAdd,
-  onUpdate,
-  editingTransaction,
-  onCancelEdit
-}: {
+type NewTransactionCardProps = {
   onAdd: (t: Transaction) => void;
   onUpdate: (t: Transaction) => void;
   editingTransaction: Transaction | null;
   onCancelEdit: () => void;
-}) {
-  const [type, setType] = useState("");
-  const [amount, setAmount] = useState("");
-  const [date, setDate] = useState("");
+};
 
-  useEffect(() => {
-    if (editingTransaction) {
-      setType(editingTransaction.type);
-      setAmount(String(editingTransaction.amount));
-      setDate(editingTransaction.date);
-    }
-  }, [editingTransaction]);
+export default function NewTransactionCard(props: NewTransactionCardProps) {
+  return (
+    <NewTransactionForm
+      key={props.editingTransaction?.id ?? "new"}
+      {...props}
+    />
+  );
+}
+
+function NewTransactionForm({
+  onAdd,
+  onUpdate,
+  editingTransaction,
+  onCancelEdit,
+}: NewTransactionCardProps) {
+  const [type, setType] = useState(editingTransaction?.type ?? "");
+  const [amount, setAmount] = useState(
+    editingTransaction ? String(editingTransaction.amount) : ""
+  );
+  const [date, setDate] = useState(editingTransaction?.date ?? "");
 
   return (
     <section className="rounded-2xl bg-white p-6 shadow-md">

@@ -4,27 +4,27 @@ import { useEffect, useState } from "react";
 import { Transaction } from "../types";
 
 export function useTransactions() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    if (typeof window === "undefined") {
+      return [];
+    }
 
-  useEffect(() => {
     const stored = localStorage.getItem("transactions");
 
     if (stored) {
       try {
-        setTransactions(JSON.parse(stored));
+        return JSON.parse(stored);
       } catch {
         localStorage.removeItem("transactions");
       }
     }
 
-    setIsLoaded(true);
-  }, []);
+    return [];
+  });
 
   useEffect(() => {
-    if (!isLoaded) return;
     localStorage.setItem("transactions", JSON.stringify(transactions));
-  }, [transactions, isLoaded]);
+  }, [transactions]);
 
   return {
     transactions,
