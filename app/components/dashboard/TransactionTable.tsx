@@ -163,6 +163,7 @@ export default function TransactionTable({
               <th className="py-3 pr-4">Tipo</th>
               <th className="py-3 pr-4">Descrição</th>
               <th className="py-3 pr-4">Categoria</th>
+              <th className="py-3 pr-4">Documento</th>
               <th className="py-3 pr-4">Data</th>
               <th className="py-3 pr-4 text-right">Valor</th>
               <th className="py-3 text-right">Ações</th>
@@ -178,6 +179,19 @@ export default function TransactionTable({
                 </td>
                 <td className="py-3 pr-4">
                   {transaction.category?.trim() || "Sem categoria"}
+                </td>
+                <td className="py-3 pr-4">
+                  {transaction.receipt ? (
+                    <a
+                      href={transaction.receipt.dataUrl}
+                      download={transaction.receipt.name}
+                      className="font-bold text-[#0f4c5c] hover:underline"
+                    >
+                      Ver
+                    </a>
+                  ) : (
+                    "-"
+                  )}
                 </td>
                 <td className="py-3 pr-4">{formatDate(transaction.date)}</td>
                 <td className="py-3 pr-4 text-right font-medium">

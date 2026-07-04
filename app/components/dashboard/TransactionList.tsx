@@ -99,8 +99,18 @@ export default function TransactionList({
         <section className="mt-6 rounded-xl bg-[#f8fafc] p-3">
           <h3 className="font-bold">Detalhes</h3>
           <p>Tipo: {selectedTransaction.type}</p>
+          <p>Categoria: {selectedTransaction.category || "Sem categoria"}</p>
           <p>Valor: {formatCurrency(selectedTransaction.amount)}</p>
           <p>Data: {formatDate(selectedTransaction.date)}</p>
+          {selectedTransaction.receipt && (
+            <a
+              href={selectedTransaction.receipt.dataUrl}
+              download={selectedTransaction.receipt.name}
+              className="mt-2 inline-block font-bold text-[#0f4c5c] hover:underline"
+            >
+              Baixar documento
+            </a>
+          )}
         </section>
       )}
     </aside>
