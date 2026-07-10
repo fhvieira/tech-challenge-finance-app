@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         ),
       };
     } else {
+      config.output.environment = {
+        ...(config.output.environment ?? {}),
+        asyncFunction: true,
+      };
       config.plugins.push(
         new webpack.container.ModuleFederationPlugin({
           name: "financeShell",
