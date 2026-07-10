@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
           name: "financeShell",
           remotes: {
             transactionsRemote:
-              "transactionsRemote@http://localhost:3001/_next/static/chunks/remoteEntry.js",
+              "transactionsRemote@http://127.0.0.1:3001/_next/static/chunks/remoteEntry.js",
           },
         })
       );

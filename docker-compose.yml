@@ -1,0 +1,19 @@
+services:
+  transactions-remote:
+    build:
+      context: ./transactions-remote
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+
+  shell:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - transactions-remote
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production

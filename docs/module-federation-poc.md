@@ -34,7 +34,7 @@ transactionsRemote/TransactionsFeature
 Its remote entry is served from:
 
 ```txt
-http://localhost:3001/_next/static/chunks/remoteEntry.js
+http://127.0.0.1:3001/_next/static/chunks/remoteEntry.js
 ```
 
 ## How The Shell Consumes The Remote
@@ -42,10 +42,10 @@ http://localhost:3001/_next/static/chunks/remoteEntry.js
 The shell configures webpack Module Federation in `next.config.ts` and maps:
 
 ```txt
-transactionsRemote@http://localhost:3001/_next/static/chunks/remoteEntry.js
+transactionsRemote@http://127.0.0.1:3001/_next/static/chunks/remoteEntry.js
 ```
 
-The `/trasacoes` page loads the remote with `next/dynamic` and `ssr: false`.
+The `/trasacoes` page loads the remote in a client component with `import()`.
 The shell passes `transactions`, `onDelete`, and `onUpdate` as props. The remote
 does not read or write `localStorage`.
 
@@ -60,5 +60,38 @@ npm run build
 ```
 
 Both builds run in webpack mode because Module Federation is a webpack feature.
-The shell build may warn that the external remote script uses `async/await`;
-the build still completes successfully.
+
+## Docker
+
+Build and run both applications together:
+
+```bash
+docker compose up --build
+```
+
+The shell is available at:
+
+```txt
+http://localhost:3000
+```
+
+The transactions remote is available at:
+
+```txt
+http://localhost:3001
+```
+
+Stop the containers:
+
+```bash
+docker compose down
+```
+
+The shell still consumes the remote entry from:
+
+```txt
+http://127.0.0.1:3001/_next/static/chunks/remoteEntry.js
+```
+
+This Docker setup is intended for local Phase 2 validation where both ports are
+published to the host machine.

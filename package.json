@@ -7,7 +7,7 @@
     "dev:remote": "npm --prefix transactions-remote run dev",
     "build": "next build --webpack",
     "build:remote": "npm --prefix transactions-remote run build",
-    "start": "next start",
+    "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
