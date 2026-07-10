@@ -1,3 +1,5 @@
+"use client";
+
 import { ChangeEvent, useState } from "react";
 import { Transaction } from "../../types";
 
@@ -84,9 +86,7 @@ function validateTransaction({
     errors.description = "Use até 80 caracteres";
   }
 
-  if (!category.trim()) {
-    errors.category = "Informe ou selecione uma categoria";
-  } else if (category.trim().length > 40) {
+  if (category.trim().length > 40) {
     errors.category = "Use até 40 caracteres";
   }
 
@@ -177,8 +177,54 @@ function NewTransactionForm({
     }
   };
 
+  const handleSubmit = () => {
+    const validationErrors = validateTransaction({
+      type,
+      amount,
+      date,
+      description,
+      category,
+      receipt,
+    });
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    const transactionPayload = {
+      type,
+      amount: Number(amount),
+      date,
+      description: description.trim() || undefined,
+      category: category.trim() || undefined,
+      receipt: receipt ?? undefined,
+    };
+
+    if (editingTransaction) {
+      onUpdate({
+        id: editingTransaction.id,
+        ...transactionPayload,
+      });
+    } else {
+      onAdd({
+        id: Date.now(),
+        ...transactionPayload,
+      });
+    }
+
+    clearForm();
+  };
+
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-md">
+    <form
+      className="rounded-2xl bg-white p-6 shadow-md"
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleSubmit();
+      }}
+    >
       <h2 className="mb-[15px] text-2xl font-bold">Nova transação</h2>
 
       <div className="mb-3 grid gap-3 md:grid-cols-3">
@@ -302,47 +348,8 @@ function NewTransactionForm({
       </div>
 
       <button
-        type="button"
+        type="submit"
         className="w-full rounded-lg bg-teal-900 p-3 font-bold text-white transition hover:bg-teal-950"
-        onClick={() => {
-          const validationErrors = validateTransaction({
-            type,
-            amount,
-            date,
-            description,
-            category,
-            receipt,
-          });
-
-          setErrors(validationErrors);
-
-          if (Object.keys(validationErrors).length > 0) {
-            return;
-          }
-
-          const transactionPayload = {
-            type,
-            amount: Number(amount),
-            date,
-            description: description.trim() || undefined,
-            category: category.trim(),
-            receipt: receipt ?? undefined,
-          };
-
-          if (editingTransaction) {
-            onUpdate({
-              id: editingTransaction.id,
-              ...transactionPayload,
-            });
-          } else {
-            onAdd({ 
-              id: Date.now(),
-              ...transactionPayload,
-            });
-          }
-
-          clearForm();
-        }}
       >
         {editingTransaction ? "Salvar alteração" : "Concluir transação"}
       </button>
@@ -358,6 +365,6 @@ function NewTransactionForm({
           Cancelar edição
         </button>
       )}
-    </section>
+    </form>
   );
 }

@@ -1,7 +1,30 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  webpack(config, { isServer, webpack }) {
+    if (isServer) {
+      config.resolve.alias = {
+        ...(config.resolve.alias ?? {}),
+        "transactionsRemote/TransactionsFeature": path.resolve(
+          __dirname,
+          "app/components/transactions/TransactionsFeature.tsx"
+        ),
+      };
+    } else {
+      config.plugins.push(
+        new webpack.container.ModuleFederationPlugin({
+          name: "financeShell",
+          remotes: {
+            transactionsRemote:
+              "transactionsRemote@http://localhost:3001/_next/static/chunks/remoteEntry.js",
+          },
+        })
+      );
+    }
+
+    return config;
+  },
 };
 
 export default nextConfig;
