@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 import path from "node:path";
 
+const transactionsRemoteUrl = (
+  process.env.NEXT_PUBLIC_TRANSACTIONS_REMOTE_URL ?? "http://127.0.0.1:3001"
+).replace(/\/$/, "");
+
 const nextConfig: NextConfig = {
   webpack(config, { isServer, webpack }) {
     if (isServer) {
@@ -21,7 +25,7 @@ const nextConfig: NextConfig = {
           name: "financeShell",
           remotes: {
             transactionsRemote:
-              "transactionsRemote@http://127.0.0.1:3001/_next/static/chunks/remoteEntry.js",
+              `transactionsRemote@${transactionsRemoteUrl}/_next/static/chunks/remoteEntry.js`,
           },
         })
       );

@@ -10,9 +10,15 @@ type TransactionsFeatureProps = {
   onUpdate: (transaction: Transaction) => void;
 };
 
+type RemoteFeatureState = {
+  Component: ComponentType<TransactionsFeatureProps>;
+  isFallback: boolean;
+};
+
 export default function RemoteTransactionsFeature(props: TransactionsFeatureProps) {
-  const [Feature, setFeature] =
-    useState<ComponentType<TransactionsFeatureProps> | null>(null);
+  const [featureState, setFeatureState] = useState<RemoteFeatureState | null>(
+    null
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -20,12 +26,18 @@ export default function RemoteTransactionsFeature(props: TransactionsFeatureProp
     import("transactionsRemote/TransactionsFeature")
       .then((module) => {
         if (isMounted) {
-          setFeature(() => module.default);
+          setFeatureState({
+            Component: module.default,
+            isFallback: false,
+          });
         }
       })
       .catch(() => {
         if (isMounted) {
-          setFeature(() => LocalTransactionsFeature);
+          setFeatureState({
+            Component: LocalTransactionsFeature,
+            isFallback: true,
+          });
         }
       });
 
@@ -34,7 +46,7 @@ export default function RemoteTransactionsFeature(props: TransactionsFeatureProp
     };
   }, []);
 
-  if (!Feature) {
+  if (!featureState) {
     return (
       <section className="rounded-2xl bg-white p-5 shadow-sm">
         <p className="text-sm text-slate-500">Carregando transações...</p>
@@ -42,5 +54,16 @@ export default function RemoteTransactionsFeature(props: TransactionsFeatureProp
     );
   }
 
-  return <Feature {...props} />;
+  const { Component, isFallback } = featureState;
+
+  return (
+    <>
+      {isFallback && (
+        <section className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          Remote indisponível. Usando módulo local de transações.
+        </section>
+      )}
+      <Component {...props} />
+    </>
+  );
 }
