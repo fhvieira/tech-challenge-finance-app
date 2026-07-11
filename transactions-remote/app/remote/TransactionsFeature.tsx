@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { FormEvent } from "react";
 
 type Transaction = {
   id: number;
@@ -19,6 +19,7 @@ type Transaction = {
 
 type TransactionsFeatureProps = {
   transactions: Transaction[];
+  onAdd: (transaction: Transaction) => void;
   onDelete: (id: number) => void;
   onUpdate: (transaction: Transaction) => void;
 };
@@ -37,42 +38,31 @@ function formatDate(dateString: string) {
 
 export default function TransactionsFeature({
   transactions,
+  onAdd,
   onDelete,
-  onUpdate,
 }: TransactionsFeatureProps) {
-  const [editingTransaction, setEditingTransaction] =
-    useState<Transaction | null>(null);
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const categories = useMemo(() => {
-    return Array.from(
-      new Set(
-        transactions.map(
-          (transaction) => transaction.category?.trim() || "Sem categoria"
-        )
-      )
-    );
-  }, [transactions]);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const type = String(formData.get("type") ?? "");
+    const amount = Number(formData.get("amount") ?? 0);
+    const date = String(formData.get("date") ?? "");
+    const description = String(formData.get("description") ?? "").trim();
+    const category = String(formData.get("category") ?? "").trim();
 
-  const filteredTransactions = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    return transactions.filter((transaction) => {
-      const category = transaction.category?.trim() || "Sem categoria";
-      const matchesSearch =
-        normalizedSearch === "" ||
-        (transaction.description ?? "").toLowerCase().includes(normalizedSearch) ||
-        category.toLowerCase().includes(normalizedSearch);
-      const matchesType =
-        typeFilter === "all" || transaction.type === typeFilter;
-      const matchesCategory =
-        categoryFilter === "all" || categoryFilter === category;
-
-      return matchesSearch && matchesType && matchesCategory;
+    onAdd({
+      id: Date.now(),
+      type,
+      amount,
+      date,
+      description: description || undefined,
+      category: category || undefined,
     });
-  }, [categoryFilter, search, transactions, typeFilter]);
+
+    form.reset();
+  };
 
   return (
     <section className="rounded-2xl bg-white p-5 shadow-sm">
@@ -86,49 +76,58 @@ export default function TransactionsFeature({
         </span>
       </div>
 
-      {editingTransaction && (
-        <EditTransactionForm
-          transaction={editingTransaction}
-          onCancel={() => setEditingTransaction(null)}
-          onSave={(updatedTransaction) => {
-            onUpdate(updatedTransaction);
-            setEditingTransaction(null);
-          }}
-        />
-      )}
+      <form
+        onSubmit={handleSubmit}
+        className="mb-5 rounded-2xl bg-[#f8fafc] p-4"
+      >
+        <h3 className="mb-3 text-lg font-bold">Nova transação</h3>
+        <div className="grid gap-3 md:grid-cols-3">
+          <select
+            required
+            name="type"
+            defaultValue=""
+            className="rounded-lg border border-slate-300 p-3"
+          >
+            <option value="">Tipo</option>
+            <option value="Depósito">Depósito</option>
+            <option value="Transferência">Transferência</option>
+          </select>
+          <input
+            required
+            name="amount"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="Valor"
+            className="rounded-lg border border-slate-300 p-3"
+          />
+          <input
+            required
+            name="date"
+            type="date"
+            className="rounded-lg border border-slate-300 p-3"
+          />
+          <input
+            name="description"
+            type="text"
+            placeholder="Descrição"
+            className="rounded-lg border border-slate-300 p-3"
+          />
+          <input
+            name="category"
+            type="text"
+            placeholder="Categoria"
+            className="rounded-lg border border-slate-300 p-3"
+          />
+        </div>
 
-      <div className="mb-4 grid gap-3 md:grid-cols-3">
-        <input
-          type="search"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Buscar descrição ou categoria"
-          className="rounded-lg border border-slate-300 p-3"
-        />
-
-        <select
-          value={typeFilter}
-          onChange={(event) => setTypeFilter(event.target.value)}
-          className="rounded-lg border border-slate-300 p-3"
+        <button
+          type="submit"
+          className="mt-3 w-full rounded-lg bg-teal-900 px-4 py-3 font-bold text-white transition hover:bg-teal-950 sm:w-auto"
         >
-          <option value="all">Todos os tipos</option>
-          <option value="Depósito">Depósito</option>
-          <option value="Transferência">Transferência</option>
-        </select>
-
-        <select
-          value={categoryFilter}
-          onChange={(event) => setCategoryFilter(event.target.value)}
-          className="rounded-lg border border-slate-300 p-3"
-        >
-          <option value="all">Todas as categorias</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+          Concluir transação
+        </button>
+      </form>
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
@@ -144,7 +143,7 @@ export default function TransactionsFeature({
           </thead>
 
           <tbody>
-            {filteredTransactions.map((transaction) => (
+            {transactions.map((transaction) => (
               <tr key={transaction.id} className="border-b last:border-b-0">
                 <td className="py-3 pr-4">{transaction.type}</td>
                 <td className="py-3 pr-4">
@@ -158,22 +157,13 @@ export default function TransactionsFeature({
                   {formatCurrency(transaction.amount)}
                 </td>
                 <td className="py-3 text-right">
-                  <div className="flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setEditingTransaction(transaction)}
-                      className="rounded-md bg-[#eef2f3] px-2 py-1 transition hover:bg-[#dfe5e7]"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onDelete(transaction.id)}
-                      className="rounded-md bg-[#ffecec] px-2 py-1 transition hover:bg-[#ffdede]"
-                    >
-                      Excluir
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onDelete(transaction.id)}
+                    className="rounded-md bg-[#ffecec] px-2 py-1 transition hover:bg-[#ffdede]"
+                  >
+                    Excluir
+                  </button>
                 </td>
               </tr>
             ))}
@@ -181,95 +171,11 @@ export default function TransactionsFeature({
         </table>
       </div>
 
-      {filteredTransactions.length === 0 && (
+      {transactions.length === 0 && (
         <p className="mt-4 text-sm text-slate-500">
           Nenhuma transação encontrada
         </p>
       )}
     </section>
-  );
-}
-
-function EditTransactionForm({
-  transaction,
-  onCancel,
-  onSave,
-}: {
-  transaction: Transaction;
-  onCancel: () => void;
-  onSave: (transaction: Transaction) => void;
-}) {
-  const [type, setType] = useState(transaction.type);
-  const [amount, setAmount] = useState(String(transaction.amount));
-  const [date, setDate] = useState(transaction.date);
-  const [description, setDescription] = useState(transaction.description ?? "");
-  const [category, setCategory] = useState(transaction.category ?? "");
-
-  return (
-    <div className="mb-5 rounded-2xl bg-[#f8fafc] p-4">
-      <h3 className="mb-3 text-lg font-bold">Editar transação</h3>
-      <div className="grid gap-3 md:grid-cols-3">
-        <select
-          value={type}
-          onChange={(event) => setType(event.target.value)}
-          className="rounded-lg border border-slate-300 p-3"
-        >
-          <option value="Depósito">Depósito</option>
-          <option value="Transferência">Transferência</option>
-        </select>
-        <input
-          type="number"
-          value={amount}
-          onChange={(event) => setAmount(event.target.value)}
-          className="rounded-lg border border-slate-300 p-3"
-        />
-        <input
-          type="date"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-          className="rounded-lg border border-slate-300 p-3"
-        />
-        <input
-          type="text"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          placeholder="Descrição"
-          className="rounded-lg border border-slate-300 p-3"
-        />
-        <input
-          type="text"
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-          placeholder="Categoria"
-          className="rounded-lg border border-slate-300 p-3"
-        />
-      </div>
-
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-        <button
-          type="button"
-          onClick={() =>
-            onSave({
-              ...transaction,
-              type,
-              amount: Number(amount),
-              date,
-              description: description.trim() || undefined,
-              category: category.trim() || undefined,
-            })
-          }
-          className="rounded-lg bg-teal-900 px-4 py-3 font-bold text-white transition hover:bg-teal-950"
-        >
-          Salvar alteração
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-lg border border-slate-300 px-4 py-3 font-bold text-slate-700 transition hover:bg-slate-100"
-        >
-          Cancelar edição
-        </button>
-      </div>
-    </div>
   );
 }
