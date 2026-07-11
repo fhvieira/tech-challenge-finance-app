@@ -12,7 +12,9 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    ".vercel/**",
     "transactions-remote/.next/**",
+    "transactions-remote/.vercel/**",
     "transactions-remote/out/**",
     "transactions-remote/node_modules/**",
     "out/**",

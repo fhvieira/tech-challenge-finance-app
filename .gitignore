@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/transactions-remote/node_modules
 /.pnp
 .pnp.*
 .yarn/*

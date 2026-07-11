@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
   webpack(config, { isServer, webpack }) {
     if (!isServer) {
+      config.optimization.runtimeChunk = false;
+      config.output.uniqueName = "transactionsRemote";
+      config.output.chunkLoadingGlobal = "webpackChunk_transactionsRemote";
+      config.output.publicPath = "auto";
       config.plugins.push(
         new webpack.container.ModuleFederationPlugin({
           name: "transactionsRemote",

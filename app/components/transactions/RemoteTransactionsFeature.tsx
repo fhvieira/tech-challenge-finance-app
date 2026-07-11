@@ -6,6 +6,7 @@ import LocalTransactionsFeature from "./TransactionsFeature";
 
 type TransactionsFeatureProps = {
   transactions: Transaction[];
+  onAdd: (transaction: Transaction) => void;
   onDelete: (id: number) => void;
   onUpdate: (transaction: Transaction) => void;
 };
