@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import BalanceCard from "./BalanceCard";
+import DashboardCharts from "./DashboardCharts";
 import NewTransactionCard from "./NewTransactionCard";
 import TransactionList from "./TransactionList";
 import Header from "../layout/Header";
@@ -52,6 +53,7 @@ export default function Dashboard() {
       <div className="flex min-w-0 flex-1 flex-col gap-5 p-4 sm:p-5">
         <Header />
         <BalanceCard balance={balance} />
+        <DashboardCharts transactions={transactions} />
 
         <NewTransactionCard
           onAdd={(transaction) =>

@@ -3,18 +3,10 @@
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import { useTransactions } from "../hooks/useTransactions";
-import { useState } from "react";
-import { Transaction } from "../types";
-import TransactionTable from "../components/dashboard/TransactionTable";
-import NewTransactionCard from "../components/dashboard/NewTransactionCard";
+import RemoteTransactionsFeature from "../components/transactions/RemoteTransactionsFeature";
 
 export default function TransactionsPage() {
   const { transactions, setTransactions } = useTransactions();
-  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-
-  const handleEdit = (transaction: Transaction) => {
-    setEditingTransaction(transaction);
-  };
 
   const handleDelete = (id: number) => {
     setTransactions((current) =>
@@ -22,14 +14,12 @@ export default function TransactionsPage() {
     );
   };
 
-  const handleUpdate = (updatedTransaction: Transaction) => {
+  const handleUpdate = (updatedTransaction: typeof transactions[number]) => {
     setTransactions((currentTransactions) =>
       currentTransactions.map((transaction) =>
         transaction.id === updatedTransaction.id ? updatedTransaction : transaction
       )
     );
-
-    setEditingTransaction(null);
   };
 
   return (
@@ -39,21 +29,11 @@ export default function TransactionsPage() {
       <div className="flex min-w-0 flex-1 flex-col gap-5 p-4 sm:p-5">
         <Header />
 
-        <section className="rounded-2xl bg-white p-5 shadow-sm">
-          {editingTransaction && (
-            <NewTransactionCard
-              onAdd={() => {}}
-              editingTransaction={editingTransaction}
-              onUpdate={handleUpdate}
-              onCancelEdit={() => setEditingTransaction(null)}
-            />
-          )}
-          <TransactionTable
-            transactions={transactions}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
-        </section>
+        <RemoteTransactionsFeature
+          transactions={transactions}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+        />
       </div>
     </main>
   );

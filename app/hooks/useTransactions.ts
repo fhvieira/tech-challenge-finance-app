@@ -1,30 +1,88 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useSyncExternalStore } from "react";
 import { Transaction } from "../types";
 
-export function useTransactions() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+const transactionsStorageKey = "transactions";
+const emptyTransactions: Transaction[] = [];
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("transactions");
+let cachedRawTransactions: string | null | undefined;
+let cachedTransactions: Transaction[] = emptyTransactions;
 
-    if (stored) {
-      try {
-        setTransactions(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem("transactions");
-      }
+function readStoredTransactions() {
+  if (typeof window === "undefined") {
+    return emptyTransactions;
+  }
+
+  const stored = localStorage.getItem(transactionsStorageKey);
+
+  if (stored === cachedRawTransactions) {
+    return cachedTransactions;
+  }
+
+  cachedRawTransactions = stored;
+
+  if (!stored) {
+    cachedTransactions = emptyTransactions;
+    return cachedTransactions;
+  }
+
+  try {
+    cachedTransactions = JSON.parse(stored);
+  } catch {
+    localStorage.removeItem(transactionsStorageKey);
+    cachedRawTransactions = null;
+    cachedTransactions = emptyTransactions;
+  }
+
+  return cachedTransactions;
+}
+
+function getServerSnapshot() {
+  return emptyTransactions;
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === transactionsStorageKey) {
+      cachedRawTransactions = undefined;
+      listener();
     }
+  };
 
-    setIsLoaded(true);
-  }, []);
+  window.addEventListener("storage", handleStorage);
 
-  useEffect(() => {
-    if (!isLoaded) return;
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  }, [transactions, isLoaded]);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", handleStorage);
+  };
+}
+
+function emitChange() {
+  listeners.forEach((listener) => listener());
+}
+
+export function useTransactions() {
+  const transactions = useSyncExternalStore(
+    subscribe,
+    readStoredTransactions,
+    getServerSnapshot
+  );
+
+  const setTransactions: Dispatch<SetStateAction<Transaction[]>> = (value) => {
+    const currentTransactions = readStoredTransactions();
+    const nextTransactions =
+      typeof value === "function" ? value(currentTransactions) : value;
+    const nextRawTransactions = JSON.stringify(nextTransactions);
+
+    cachedTransactions = nextTransactions;
+    cachedRawTransactions = nextRawTransactions;
+    localStorage.setItem(transactionsStorageKey, nextRawTransactions);
+    emitChange();
+  };
 
   return {
     transactions,

@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+build
+coverage
+storybook-static
+*.log
+.DS_Store
+.env*
+transactions-remote/node_modules
+transactions-remote/.next
+transactions-remote/out
