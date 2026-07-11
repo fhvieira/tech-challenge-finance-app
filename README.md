@@ -1,8 +1,8 @@
 # Tech Challenge - Dashboard Financeiro
 
-Aplicacao front-end para gerenciamento de transacoes financeiras, desenvolvida com **Next.js App Router**, **React**, **TypeScript** e **Tailwind CSS**.
+Este projeto foi desenvolvido como parte do Tech Challenge – Fase 2 da Pós-Tech FIAP. O objetivo foi evoluir a aplicação de gerenciamento financeiro da Fase 1 adicionando novas funcionalidades, arquitetura baseada em microfrontends, containerização com Docker e deploy em ambiente cloud.
 
-## Aplicacao Publicada
+## Aplicação Publicada
 
 - Shell/dashboard: https://tech-challenge-finance-app.vercel.app
 - Transactions remote: https://transactions-remote.vercel.app
@@ -25,7 +25,9 @@ O projeto permite que o usuario:
 
 A interface foi inspirada no layout fornecido no Figma, priorizando clareza, usabilidade e responsividade.
 
-## Phase 2
+Durante o desenvolvimento também foram adotadas boas práticas de experiência do usuário, como layout responsivo, componentes HTML semânticos e organização consistente da interface, buscando melhorar a acessibilidade da aplicação.
+
+## Principais melhorias da Fase 2
 
 Nesta fase foram adicionados:
 
@@ -35,6 +37,18 @@ Nesta fase foram adicionados:
 - Prova de conceito de microfrontend com Module Federation
 - Suporte a Docker e Docker Compose para executar shell e remote juntos
 - Configuracao de deploy separado para shell e remote na Vercel
+
+## Requisitos da Fase 2 Atendidos
+
+- ✅ Dashboard com gráficos financeiros
+- ✅ Busca e filtros avançados
+- ✅ Paginação client-side
+- ✅ Validação avançada
+- ✅ Sugestões automáticas de categorias
+- ✅ Upload de comprovantes/documentos
+- ✅ Arquitetura baseada em microfrontends (Module Federation)
+- ✅ Docker e Docker Compose
+- ✅ Deploy em cloud (Vercel)
 
 ## Arquitetura de Microfrontend
 
@@ -78,6 +92,7 @@ Caso o remote esteja indisponivel no browser, o shell usa uma implementacao loca
 - Webpack Module Federation
 - Storybook
 - Docker
+- Vercel
 
 ## Estrutura do Projeto
 
@@ -161,7 +176,7 @@ npm run build:remote
 npm run build
 ```
 
-Os builds usam `--webpack` porque Module Federation depende do webpack.
+Como o projeto utiliza Next.js 16 com App Router, os builds são executados utilizando `--webpack` para suportar Module Federation.
 
 ## Docker
 
@@ -225,5 +240,4 @@ O fluxo de demonstracao recomendado para a entrega inclui:
 
 - Nao ha back-end; os dados sao gerenciados no front-end.
 - As transacoes sao armazenadas no `localStorage`.
-- O shell deve ser redeployado quando a URL do remote mudar, pois `NEXT_PUBLIC_TRANSACTIONS_REMOTE_URL` e lida no build.
 - O Figma foi utilizado como referencia visual, sem seguir rigidamente cada detalhe.
