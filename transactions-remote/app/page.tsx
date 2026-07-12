@@ -26,7 +26,6 @@ export default function RemotePreviewPage() {
     <main className="min-h-screen bg-[#f4f6f8] p-5 text-slate-900">
       <TransactionsFeature
         transactions={demoTransactions}
-        onAdd={() => {}}
         onDelete={() => {}}
         onUpdate={() => {}}
       />

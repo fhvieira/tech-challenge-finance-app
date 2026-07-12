@@ -8,13 +8,6 @@ import RemoteTransactionsFeature from "../components/transactions/RemoteTransact
 export default function TransactionsPage() {
   const { transactions, setTransactions } = useTransactions();
 
-  const handleAdd = (transaction: typeof transactions[number]) => {
-    setTransactions((currentTransactions) => [
-      ...currentTransactions,
-      transaction,
-    ]);
-  };
-
   const handleDelete = (id: number) => {
     setTransactions((current) =>
       current.filter((t) => t.id !== id)
@@ -38,7 +31,6 @@ export default function TransactionsPage() {
 
         <RemoteTransactionsFeature
           transactions={transactions}
-          onAdd={handleAdd}
           onDelete={handleDelete}
           onUpdate={handleUpdate}
         />

@@ -7,14 +7,12 @@ import TransactionTable from "../dashboard/TransactionTable";
 
 type TransactionsFeatureProps = {
   transactions: Transaction[];
-  onAdd: (transaction: Transaction) => void;
   onDelete: (id: number) => void;
   onUpdate: (transaction: Transaction) => void;
 };
 
 export default function TransactionsFeature({
   transactions,
-  onAdd,
   onDelete,
   onUpdate,
 }: TransactionsFeatureProps) {
@@ -28,14 +26,16 @@ export default function TransactionsFeature({
 
   return (
     <section className="rounded-2xl bg-white p-5 shadow-sm">
-      <div className="mb-5">
-        <NewTransactionCard
-          onAdd={onAdd}
-          editingTransaction={editingTransaction}
-          onUpdate={handleUpdate}
-          onCancelEdit={() => setEditingTransaction(null)}
-        />
-      </div>
+      {editingTransaction && (
+        <div className="mb-5">
+          <NewTransactionCard
+            onAdd={() => {}}
+            editingTransaction={editingTransaction}
+            onUpdate={handleUpdate}
+            onCancelEdit={() => setEditingTransaction(null)}
+          />
+        </div>
+      )}
       <TransactionTable
         transactions={transactions}
         onDelete={onDelete}

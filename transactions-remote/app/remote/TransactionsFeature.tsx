@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, Fragment } from "react";
 
 type Transaction = {
   id: number;
@@ -19,7 +19,6 @@ type Transaction = {
 
 type TransactionsFeatureProps = {
   transactions: Transaction[];
-  onAdd: (transaction: Transaction) => void;
   onDelete: (id: number) => void;
   onUpdate: (transaction: Transaction) => void;
 };
@@ -38,22 +37,33 @@ function formatDate(dateString: string) {
 
 export default function TransactionsFeature({
   transactions,
-  onAdd,
   onDelete,
+  onUpdate,
 }: TransactionsFeatureProps) {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const toggleEditForm = (id: number, isHidden?: boolean) => {
+    const editRow = document.getElementById(`edit-transaction-${id}`);
+
+    if (!editRow) return;
+
+    editRow.toggleAttribute("hidden", isHidden ?? !editRow.hasAttribute("hidden"));
+  };
+
+  const handleEditSubmit = (
+    event: FormEvent<HTMLFormElement>,
+    transaction: Transaction
+  ) => {
     event.preventDefault();
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const type = String(formData.get("type") ?? "");
-    const amount = Number(formData.get("amount") ?? 0);
-    const date = String(formData.get("date") ?? "");
+    const type = String(formData.get("type") ?? transaction.type);
+    const amount = Number(formData.get("amount") ?? transaction.amount);
+    const date = String(formData.get("date") ?? transaction.date);
     const description = String(formData.get("description") ?? "").trim();
     const category = String(formData.get("category") ?? "").trim();
 
-    onAdd({
-      id: Date.now(),
+    onUpdate({
+      ...transaction,
       type,
       amount,
       date,
@@ -61,7 +71,7 @@ export default function TransactionsFeature({
       category: category || undefined,
     });
 
-    form.reset();
+    toggleEditForm(transaction.id, true);
   };
 
   return (
@@ -75,59 +85,6 @@ export default function TransactionsFeature({
           transactionsRemote
         </span>
       </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="mb-5 rounded-2xl bg-[#f8fafc] p-4"
-      >
-        <h3 className="mb-3 text-lg font-bold">Nova transação</h3>
-        <div className="grid gap-3 md:grid-cols-3">
-          <select
-            required
-            name="type"
-            defaultValue=""
-            className="rounded-lg border border-slate-300 p-3"
-          >
-            <option value="">Tipo</option>
-            <option value="Depósito">Depósito</option>
-            <option value="Transferência">Transferência</option>
-          </select>
-          <input
-            required
-            name="amount"
-            type="number"
-            min="0.01"
-            step="0.01"
-            placeholder="Valor"
-            className="rounded-lg border border-slate-300 p-3"
-          />
-          <input
-            required
-            name="date"
-            type="date"
-            className="rounded-lg border border-slate-300 p-3"
-          />
-          <input
-            name="description"
-            type="text"
-            placeholder="Descrição"
-            className="rounded-lg border border-slate-300 p-3"
-          />
-          <input
-            name="category"
-            type="text"
-            placeholder="Categoria"
-            className="rounded-lg border border-slate-300 p-3"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="mt-3 w-full rounded-lg bg-teal-900 px-4 py-3 font-bold text-white transition hover:bg-teal-950 sm:w-auto"
-        >
-          Concluir transação
-        </button>
-      </form>
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
@@ -144,28 +101,106 @@ export default function TransactionsFeature({
 
           <tbody>
             {transactions.map((transaction) => (
-              <tr key={transaction.id} className="border-b last:border-b-0">
-                <td className="py-3 pr-4">{transaction.type}</td>
-                <td className="py-3 pr-4">
-                  {transaction.description?.trim() || "-"}
-                </td>
-                <td className="py-3 pr-4">
-                  {transaction.category?.trim() || "Sem categoria"}
-                </td>
-                <td className="py-3 pr-4">{formatDate(transaction.date)}</td>
-                <td className="py-3 pr-4 text-right font-medium">
-                  {formatCurrency(transaction.amount)}
-                </td>
-                <td className="py-3 text-right">
-                  <button
-                    type="button"
-                    onClick={() => onDelete(transaction.id)}
-                    className="rounded-md bg-[#ffecec] px-2 py-1 transition hover:bg-[#ffdede]"
-                  >
-                    Excluir
-                  </button>
-                </td>
-              </tr>
+              <Fragment key={transaction.id}>
+                <tr className="border-b">
+                  <td className="py-3 pr-4">{transaction.type}</td>
+                  <td className="py-3 pr-4">
+                    {transaction.description?.trim() || "-"}
+                  </td>
+                  <td className="py-3 pr-4">
+                    {transaction.category?.trim() || "Sem categoria"}
+                  </td>
+                  <td className="py-3 pr-4">{formatDate(transaction.date)}</td>
+                  <td className="py-3 pr-4 text-right font-medium">
+                    {formatCurrency(transaction.amount)}
+                  </td>
+                  <td className="py-3 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleEditForm(transaction.id)}
+                        className="rounded-md bg-[#eef2f3] px-2 py-1 transition hover:bg-[#dfe5e7]"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onDelete(transaction.id)}
+                        className="rounded-md bg-[#ffecec] px-2 py-1 transition hover:bg-[#ffdede]"
+                      >
+                        Excluir
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  id={`edit-transaction-${transaction.id}`}
+                  hidden
+                  className="border-b bg-[#f8fafc]"
+                >
+                  <td colSpan={6} className="p-4">
+                    <form
+                      onSubmit={(event) => handleEditSubmit(event, transaction)}
+                      className="grid gap-3 md:grid-cols-3"
+                    >
+                      <select
+                        required
+                        name="type"
+                        defaultValue={transaction.type}
+                        className="rounded-lg border border-slate-300 p-3"
+                      >
+                        <option value="Depósito">Depósito</option>
+                        <option value="Transferência">Transferência</option>
+                      </select>
+                      <input
+                        required
+                        name="amount"
+                        type="number"
+                        min="0.01"
+                        step="0.01"
+                        defaultValue={transaction.amount}
+                        className="rounded-lg border border-slate-300 p-3"
+                      />
+                      <input
+                        required
+                        name="date"
+                        type="date"
+                        defaultValue={transaction.date}
+                        className="rounded-lg border border-slate-300 p-3"
+                      />
+                      <input
+                        name="description"
+                        type="text"
+                        defaultValue={transaction.description ?? ""}
+                        placeholder="Descrição"
+                        className="rounded-lg border border-slate-300 p-3"
+                      />
+                      <input
+                        name="category"
+                        type="text"
+                        defaultValue={transaction.category ?? ""}
+                        placeholder="Categoria"
+                        className="rounded-lg border border-slate-300 p-3"
+                      />
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <button
+                          type="submit"
+                          className="rounded-lg bg-teal-900 px-4 py-3 font-bold text-white transition hover:bg-teal-950"
+                        >
+                          Salvar alteração
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggleEditForm(transaction.id, true)}
+                          className="rounded-lg border border-slate-300 px-4 py-3 font-bold text-slate-700 transition hover:bg-slate-100"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </form>
+                  </td>
+                </tr>
+              </Fragment>
             ))}
           </tbody>
         </table>
