@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import BalanceCard from "./BalanceCard";
 import DashboardCharts from "./DashboardCharts";
 import NewTransactionCard from "./NewTransactionCard";
@@ -13,6 +13,7 @@ import { useTransactions } from "../../hooks/useTransactions";
 export default function Dashboard() {
 
   const { transactions, setTransactions } = useTransactions();  
+  const transactionFormRef = useRef<HTMLDivElement>(null);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
@@ -35,6 +36,10 @@ export default function Dashboard() {
 
   const handleEdit = (transaction: Transaction) => {
     setEditingTransaction(transaction);
+    transactionFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   const handleDelete = (id: number) => {
@@ -55,17 +60,19 @@ export default function Dashboard() {
         <BalanceCard balance={balance} />
         <DashboardCharts transactions={transactions} />
 
-        <NewTransactionCard
-          onAdd={(transaction) =>
-            setTransactions((currentTransactions) => [
-              ...currentTransactions,
-              transaction,
-            ])
-          }
-          editingTransaction={editingTransaction}
-          onUpdate={handleUpdate}
-          onCancelEdit={() => setEditingTransaction(null)}
-        />
+        <div ref={transactionFormRef}>
+          <NewTransactionCard
+            onAdd={(transaction) =>
+              setTransactions((currentTransactions) => [
+                ...currentTransactions,
+                transaction,
+              ])
+            }
+            editingTransaction={editingTransaction}
+            onUpdate={handleUpdate}
+            onCancelEdit={() => setEditingTransaction(null)}
+          />
+        </div>
       </div>
       <TransactionList
         transactions={transactions}

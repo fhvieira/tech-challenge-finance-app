@@ -225,7 +225,9 @@ function NewTransactionForm({
         handleSubmit();
       }}
     >
-      <h2 className="mb-[15px] text-2xl font-bold">Nova transação</h2>
+      <h2 className="mb-[15px] text-2xl font-bold">
+        {editingTransaction ? "Editar transação" : "Nova transação"}
+      </h2>
 
       <div className="mb-3 grid gap-3 md:grid-cols-3">
         <div>
