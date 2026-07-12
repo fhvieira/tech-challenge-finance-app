@@ -38,18 +38,6 @@ Nesta fase foram adicionados:
 - Suporte a Docker e Docker Compose para executar shell e remote juntos
 - Configuracao de deploy separado para shell e remote na Vercel
 
-## Requisitos da Fase 2 Atendidos
-
-- ✅ Dashboard com gráficos financeiros
-- ✅ Busca e filtros avançados
-- ✅ Paginação client-side
-- ✅ Validação avançada
-- ✅ Sugestões automáticas de categorias
-- ✅ Upload de comprovantes/documentos
-- ✅ Arquitetura baseada em microfrontends (Module Federation)
-- ✅ Docker e Docker Compose
-- ✅ Deploy em cloud (Vercel)
-
 ## Arquitetura de Microfrontend
 
 A aplicacao principal continua sendo o **shell/container**. Ela fica na raiz do projeto e e responsavel por:
